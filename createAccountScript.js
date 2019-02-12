@@ -9,4 +9,4 @@ function storeAccountInfo()
   if (password.text == passwordRepeat.text){
     var password = password.text;
   }
-]
+}
