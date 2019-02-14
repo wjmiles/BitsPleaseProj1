@@ -4,6 +4,10 @@
 	<title>*WIP* Create New Account</title>
 	<link href = "reset.css" type = "text/css" rel = "stylesheet"/>
 	<link href = "createAccountStyle.css" type = "text/css" rel = "stylesheet"/>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="createAccountScript.js" type="text/javascript"></script>
+
 </head>
 <body>
 <header>
@@ -42,7 +46,7 @@
 	<td><input type="password" id="passwordRepeat"></td>
 
 	<tr>
-	<td><input type="button" class="button" value="Create Account"></td>
+	<td><input type="button" class="button" value="Create Account" onclick="storeAccountInfo()"></td>
 	</tr>
 </table>
 
