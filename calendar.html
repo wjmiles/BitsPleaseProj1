@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href = "reset.css" type = "text/css" rel = "stylesheet"/>
+	<link rel='stylesheet' type="text/css" href='./fullcalendar.css'/>
+	<link rel="stylesheet" type="text/css" href="./calendarStyle.css">
+	<script src='./jquery.js'></script>
+	<script src='./moment.js'></script>
+	<script src='./fullcalendar.js'></script>
+
+	<script type="text/javascript">
+		function startCalendar(){
+			$('#calendar').fullCalendar({
+    		editable: true,
+      		eventLimit: true,
+  			})
+		}
+	</script>
+
+	<title>*WIP*Events Calendar</title>
+</head>
+<body onload="startCalendar()">
+	<div id='calendar'>
+	</div>
+</body>
+</html>
