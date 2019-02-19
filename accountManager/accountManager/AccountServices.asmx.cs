@@ -21,6 +21,7 @@ namespace accountManager
     [System.Web.Script.Services.ScriptService]
     public class AccountServices : System.Web.Services.WebService
     {
+        //creates new user
         [WebMethod(EnableSession = true)]
         public string NewUserAccount(string screenName, string email, string firstName, string lastName, string password)
         {
@@ -50,14 +51,17 @@ namespace accountManager
             return email;
         }
 
+        List<Account> account = new List<Account>();
+
+        //sign in
         [WebMethod(EnableSession = true)]
-        public bool logOn(string email, string password)
+        public Account[] SignIn(string email, string password)
         {
             bool success = false;
 
             string sqlConnectionSring = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
 
-            string sqlSelect = "SELECT UserID, AdminT/F FROM users WHERE email=@emailValue and password=@passwordValue";
+            string sqlSelect = "SELECT * FROM users WHERE email=@emailValue and password=@passwordValue";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectionSring);
             MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
@@ -70,21 +74,55 @@ namespace accountManager
             sqlDa.Fill(sqlDt);
             if (sqlDt.Rows.Count > 0)
             {
-                Session["UserID"] = sqlDt.Rows[0]["UserID"];
-                Session["AdminT/F"] = sqlDt.Rows[0]["AdminT/F"];
+                for (int i = 0; i < sqlDt.Rows.Count; i++)
+                {
+                    account.Add(new Account
+                    {
+                        userId = Convert.ToInt32(sqlDt.Rows[i]["UserID"]),
+                        screenName = sqlDt.Rows[i]["ScreenName"].ToString(),
+                        email = sqlDt.Rows[i]["Email"].ToString(),
+                        firstName = sqlDt.Rows[i]["FirstName"].ToString(),
+                        lastName = sqlDt.Rows[i]["LastName"].ToString(),
+                        password = sqlDt.Rows[i]["Password"].ToString(),
+                        admin = Convert.ToBoolean(sqlDt.Rows[i]["Admin"])
+                    });
+                }
+                
+                //Session["UserID"] = sqlDt.Rows[0]["UserID"];
+                //Session["Admin"] = sqlDt.Rows[0]["Admin"];
                 success = true;
             }
 
-            return success;
+            //string id = Session["UserID"].ToString();
+            //string admin = Session["Admin"].ToString();
+
+            return account.ToArray();
         }
 
+        /*
         [WebMethod(EnableSession = true)]
-        public bool LogOff()
+        public Account[] GetAccount()
+        {
+            if (Session["id"] != null)
+            {
+                DataTable sqlDt = new DataTable("account");
+
+                string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+                string sqlSelect = "select * from users where UserID=@Session['UserID']";
+            }
+        }
+        */
+
+        //sign out
+        [WebMethod(EnableSession = true)]
+        public bool SignOut()
         {
             Session.Abandon();
             return true;
         }
 
+        //user count
+        //testing purposes
         [WebMethod]
         public int NumberOfUsers()
         {

@@ -83,16 +83,35 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AccountServices.asmx" />
-    <Content Include="createAccount.html" />
-    <Content Include="createAccountScript.js" />
-    <Content Include="createAccountStyle.css" />
+    <Content Include="FullCalendar_Files\fullcalendar.css" />
+    <Content Include="FullCalendar_Files\fullcalendar.js" />
+    <Content Include="FullCalendar_Files\moment.js" />
+    <Content Include="html\calendar.html" />
+    <Content Include="html\createAccount.html" />
+    <Content Include="html\profile.html" />
+    <Content Include="html\map.html" />
+    <Content Include="Scripts\createAccount.js" />
+    <Content Include="Scripts\homePage.js" />
+    <Content Include="Scripts\profile.js" />
+    <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\map.js" />
+    <Content Include="Scripts\project1.js" />
+    <Content Include="Stylesheets\createAccountStyle.css" />
     <Content Include="Global.asax" />
-    <Content Include="reset.css" />
+    <Content Include="html\homePage.html" />
+    <Content Include="Scripts\index.js" />
+    <Content Include="html\index.html" />
+    <Content Include="Stylesheets\reset.css" />
+    <Content Include="Stylesheets\calendarStyle.css" />
+    <Content Include="Stylesheets\homePageStyle.css" />
+    <Content Include="Stylesheets\indexStyle.css" />
+    <Content Include="Stylesheets\mapStyle.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account.cs" />
     <Compile Include="AccountServices.asmx.cs">
       <DependentUpon>AccountServices.asmx</DependentUpon>
       <SubType>Component</SubType>
