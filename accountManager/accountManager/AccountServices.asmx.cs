@@ -8,6 +8,10 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 
 using System.Data;
+using System.Web.Script.Services;
+using System.Web.Script.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace accountManager
 {
@@ -55,7 +59,8 @@ namespace accountManager
 
         //sign in
         [WebMethod(EnableSession = true)]
-        public Account[] SignIn(string email, string password)
+        //[ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string SignIn(string email, string password)
         {
             bool success = false;
 
@@ -96,7 +101,10 @@ namespace accountManager
             //string id = Session["UserID"].ToString();
             //string admin = Session["Admin"].ToString();
 
-            return account.ToArray();
+            //string str = new JavaScriptSerializer().Serialize(account);
+            string str = account.ToString();
+            saveEvents(str);
+            return str;
         }
 
         /*
@@ -120,7 +128,73 @@ namespace accountManager
             Session.Abandon();
             return true;
         }
+        /*
+        [WebMethod (EnableSession = true)]
+        public void saveEvents(string testStr)
+        {
+            FileStream fs = new FileStream("Events.dat", FileMode.Create, FileAccess.Write);
+            BinaryFormatter bf = new BinaryFormatter();
 
+            bf.Serialize(fs, testStr);
+
+            fs.Close();
+        }
+        */
+
+        /*
+        //creates new event
+        [WebMethod(EnableSession = true)]
+        public string NewEvent(string screenName, string email, string firstName, string lastName, string password)
+        {
+            string sqlConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+
+            string sqlSelect = "INSERT INTO `users` (`ScreenName`, `Email`, `FirstName`, `LastName`, `Password`) " +
+                               "VALUES(@sNameValue, @emailValue, @fNameValue, @lNameValue, @passwordValue);";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectionString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            sqlCommand.Parameters.AddWithValue("@sNameValue", HttpUtility.UrlDecode(screenName));
+            sqlCommand.Parameters.AddWithValue("@emailValue", HttpUtility.UrlDecode(email));
+            sqlCommand.Parameters.AddWithValue("@fNameValue", HttpUtility.UrlDecode(firstName));
+            sqlCommand.Parameters.AddWithValue("@lNameValue", HttpUtility.UrlDecode(lastName));
+            sqlCommand.Parameters.AddWithValue("@passwordValue", HttpUtility.UrlDecode(password));
+
+            sqlConnection.Open();
+            try
+            {
+                int id = Convert.ToInt32(sqlCommand.ExecuteScalar());
+            }
+            catch (Exception e)
+            {
+            }
+            sqlConnection.Close();
+
+            return email;
+        }
+
+        eventName
+	4	eventType
+	5	City
+	6	State
+	7	Zip varchar(255)    utf8_general_ci No  None Change Change Drop Drop
+More More
+	8	Address varchar(255)    utf8_general_ci No  None Change Change Drop Drop
+More More
+	9	Date date            No None             Change Change   Drop Drop
+More More
+	10	Time time            No None             Change Change   Drop Drop
+More More
+	11	Public/Private tinyint(1)          No	0			 Change Change   Drop Drop
+More More
+	12	Description varchar(255)    utf8_general_ci No  None Change Change Drop Drop
+More More
+	13	eventCapacity int (11)			No None             Change Change   Drop Drop
+More More
+	14	eventAttendance int (11)			No None             Change Change   Drop Drop
+More More
+	15	eventHost
+        */
         //user count
         //testing purposes
         [WebMethod]

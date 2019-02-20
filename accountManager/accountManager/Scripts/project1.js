@@ -118,7 +118,7 @@ function signIn(email, password) {
             success: function (msg) {
                 if (msg.d.length > 0) {
                     accountArray = msg.d;
-                    alert(accountArray.length);
+                    alert(accountArray);
                     //this will change
                     //need to load user information 
                     document.getElementById("email").value = "";
@@ -166,6 +166,13 @@ window.onload = loadAccountInfo();
 //
 //homePage.js
 //
+
+function showName() {
+    console.log(accountArray);
+    var name = accountArray[1];
+    console.log(name);
+    document.getElementById("name").innerHTML = name;
+}
 //document.getElementById("name").innerHTML = homeArray[1];
 
 
