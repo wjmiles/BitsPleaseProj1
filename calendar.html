@@ -7,22 +7,14 @@
 	<script src='./Scripts/jquery.js'></script>
 	<script src='./FullCalendar Files/moment.js'></script>
 	<script src='./FullCalendar Files/fullcalendar.js'></script>
+	<script src='./Scripts/events.js'></script>
 
 	<script type="text/javascript">
 		function startCalendar(){
 			$('#calendar').fullCalendar({
     		editable: true,
       		eventLimit: true,
-      		events: [
-	    		{
-			      title: 'Park Party',
-			      start : '2019-02-20'
-			    },
-			    {
-			      title  : 'Grand Opening Sale',
-			      start  : '2019-02-04',
-			      end    : '2019-02-08'
-			    }]
+      		events
   			})
 		}
 	</script>

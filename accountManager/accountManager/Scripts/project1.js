@@ -167,5 +167,3 @@ window.onload = loadAccountInfo();
 //homePage.js
 //
 //document.getElementById("name").innerHTML = homeArray[1];
-
-

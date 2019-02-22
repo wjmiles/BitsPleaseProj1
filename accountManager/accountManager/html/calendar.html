@@ -1,33 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link href = "reset.css" type = "text/css" rel = "stylesheet"/>
-	<link rel='stylesheet' type="text/css" href='../FullCalendar_Files/fullcalendar.css'/>
-	<link rel="stylesheet" type="text/css" href="../Stylesheets/calendarStyle.css">
-	<script src='../Scripts/jquery.js'></script>
-	<script src='../FullCalendar_Files/moment.js'></script>
-	<script src='../FullCalendar_Files/fullcalendar.js'></script>
+    <link rel="stylesheet" type="text/css" href='../Stylesheets/reset.css' />
+    <link rel='stylesheet' type="text/css" href='../FullCalendar_Files/fullcalendar.css' />
+    <link rel="stylesheet" type="text/css" href="../Stylesheets/calendarStyle.css">
+    <script src='../Scripts/jquery.js'></script>
+    <script src='../FullCalendar_Files/moment.js'></script>
+    <script src='../FullCalendar_Files/fullcalendar.js'></script>
+    <script src='../Scripts/events.js'></script>
 
-	<script type="text/javascript">
-		function startCalendar(){
-			$('#calendar').fullCalendar({
-    		editable: true,
-      		eventLimit: true,
-      		events: [
-	    		{
-			      title: 'Park Party',
-			      start : '2019-02-20'
-			    },
-			    {
-			      title  : 'Grand Opening Sale',
-			      start  : '2019-02-04',
-			      end    : '2019-02-08'
-			    }]
-  			})
-		}
-	</script>
+    <script type="text/javascript">
+        function startCalendar() {
+            $('#calendar').fullCalendar({
+                editable: true,
+                eventLimit: true,
+                events
+            })
+        }
+    </script>
 
-	<title>Events Calendar</title>
+    <title>Events Calendar</title>
 </head>
 <body onload="startCalendar()">
 	<div id='calendar'>

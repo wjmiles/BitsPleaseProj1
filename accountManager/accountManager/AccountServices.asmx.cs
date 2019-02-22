@@ -8,6 +8,11 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 
 using System.Data;
+using System.Web.Script.Services;
+using System.Web.Script.Serialization;
+
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace accountManager
 {
@@ -55,7 +60,8 @@ namespace accountManager
 
         //sign in
         [WebMethod(EnableSession = true)]
-        public Account[] SignIn(string email, string password)
+        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
+        public string SignIn(string email, string password)
         {
             bool success = false;
 
@@ -96,7 +102,9 @@ namespace accountManager
             //string id = Session["UserID"].ToString();
             //string admin = Session["Admin"].ToString();
 
-            return account.ToArray();
+            string str = new JavaScriptSerializer().Serialize(account);
+            saveReturn(str);
+            return str;
         }
 
         /*
@@ -119,6 +127,17 @@ namespace accountManager
         {
             Session.Abandon();
             return true;
+        }
+
+        [WebMethod(EnableSession = true)]
+        public void saveReturn(string testStr)
+        {
+          FileStream fs = new FileStream("C:/Users/wmiles/OneDrive - Carlisle Companies Incorporated/Desktop/Events.txt", FileMode.Create, FileAccess.Write);
+          BinaryFormatter bf = new BinaryFormatter();
+
+          bf.Serialize(fs, testStr);
+
+          fs.Close();
         }
 
         //user count
