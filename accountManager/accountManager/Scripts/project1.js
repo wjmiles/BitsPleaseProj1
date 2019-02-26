@@ -197,7 +197,6 @@ function editAccountInfo() {
                      "\",\"screenName\":\"" + encodeURI(screenName) +
                      "\",\"email\":\"" + encodeURI(email) +
                      "\",\"password\":\"" + encodeURI(password) + "\"}";
-    alert(parameters);
 
     $.ajax({
         type: "POST",
@@ -214,7 +213,20 @@ function editAccountInfo() {
 //profile.html
 //deleates user from DB
 function deleteAccount() {
+    var storedParam = localStorage.getItem("userId");
+    var webMethod = "../AccountServices.asmx/DeleateUser";
+    var parameters = "{\"userId\":\"" + encodeURI(storedParam) + "\"}";
 
+    $.ajax({
+        type: "POST",
+        url: webMethod,
+        data: parameters,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+            signOut();
+        }
+    });
 }
 
 //createEvent.html
@@ -369,20 +381,24 @@ function addEventToDB(eventName, eventType, city, state, zip, address, date, tim
 
 //index.html, homePage.html, profile.html
 //signs user out
-function SignOut() {
-    var webMethod = "../AccountServices.asmx/SignOut";
-    $.ajax({
-        type: "POST",
-        url: webMethod,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (msg) {
-            if (msg.d) {
-                window.open("../html/index.html", "_self");
+function signOut() {
+    var storedParam = localStorage.getItem("userId");
+    if (storedParam !== null) {
+        var webMethod = "../AccountServices.asmx/SignOut";
+        $.ajax({
+            type: "POST",
+            url: webMethod,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+                if (msg.d) {
+                    localStorage.clear();
+                    window.open("../html/index.html", "_self");
+                }
+            },
+            error: function (e) {
+                alert("Sign Out Failed.");
             }
-        },
-        error: function (e) {
-            alert("Sign Out Failed.");
-        }
-    });
+        });
+    }
 }

@@ -135,6 +135,7 @@ namespace accountManager
             //}
         }
 
+        //edit user
         [WebMethod(EnableSession = true)]
         public void EditUser(string userId, string firstName, string lastName, string screenName, string email, string password)
         {
@@ -150,6 +151,29 @@ namespace accountManager
             sqlCommand.Parameters.AddWithValue("@firstNameValue", HttpUtility.UrlDecode(firstName));
             sqlCommand.Parameters.AddWithValue("@lastNameValue", HttpUtility.UrlDecode(lastName));
             sqlCommand.Parameters.AddWithValue("@passwordValue", HttpUtility.UrlDecode(password));
+            sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(userId));
+
+            sqlConnection.Open();
+            try
+            {
+                sqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+            }
+            sqlConnection.Close();
+        }
+
+        //deleate user
+        [WebMethod(EnableSession = true)]
+        public void DeleateUser(string userId)
+        {
+            string SqlConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            string sqlSelect = "DELETE FROM users WHERE UserID=@userIdValue";
+
+            MySqlConnection sqlConnection = new MySqlConnection(SqlConnectionString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
             sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(userId));
 
             sqlConnection.Open();
