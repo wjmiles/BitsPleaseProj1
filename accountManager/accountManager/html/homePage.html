@@ -13,21 +13,24 @@
 
 </head>
 <body onload="LoadHomePage()">
-	<header>
+    <header>
         <a href="./homePage.html"><img src="../Media/EvenT CarryOn.png" alt="logo"></a>
-        <h1>Welcome to <span id="sName"></span>'s home page</h1>
-        <h1><input type="button" class="button" value="Sign Out" onclick="signOut()" /></h1>
+        <!--<h1>Welcome to <span id="sName"></span>'s home page</h1>-->
+        <!--<input type="button" class="button" value="Sign Out" onclick="signOut()" />-->
     </header>
 
-    <div class="homeLinks"> 
+    <div class="homeLinks">
         <table>
             <tr>
                 <td><a href="./homePage.html">Home</a></td>
                 <td><a href="./calendar.html">Events Calendar</a></td>
                 <td><a href="./map.html">Events Map</a></td>
                 <td><a href="./createEvent.html">Create Event</a></td>
-                <td><a href="./profile.html">Profile</a></td></tr>
+                <td><a href="./profile.html">Profile</a></td>
+            </tr>
         </table>
     </div>
+    <h1>Welcome to <span id="sName"></span>'s home page</h1>
+    <input type="button" class="button" id="signOut" value="Sign Out" onclick="signOut()" />
 </body>
 </html>

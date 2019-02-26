@@ -224,6 +224,33 @@ namespace accountManager
             return str;
         }
 
+        [WebMethod(EnableSession = true)]
+        public Event[] GetEvents()
+        {
+            DataTable sqlDt = new DataTable("events");
+
+            string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            string sqlSelect = "select * from events order by Date";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+            sqlDa.Fill(sqlDt);
+
+            List<Event> events = new List<Event>();
+            for (int i = 0; i < sqlDt.Rows.Count; i++)
+            {
+                events.Add(new Event
+                {
+                    eventId = Convert.ToInt32(sqlDt.Rows[i]["eventID"]),
+                    date = sqlDt.Rows[i]["Date"].ToString(),
+                    description = sqlDt.Rows[i]["Description"].ToString()
+                });
+            }
+            return events.ToArray();
+        }
+
         //user count
         //testing purposes
         [WebMethod]

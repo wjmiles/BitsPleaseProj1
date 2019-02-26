@@ -1,4 +1,5 @@
 ﻿var accountArray;
+var eventsArray;
 
 //createAccount.html
 //stores user information from html
@@ -74,8 +75,7 @@ function addUserToDB(screenName, userName, fName, lName, email, password) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (msg) {
-            alert("Might of worked! :)");
-            //console.log(parameters);
+            signIn(email, password)
         },
         error: function (e) {
             alert("Probably didn't work :(");
@@ -301,6 +301,35 @@ function addEventToDB(date, description) {
         error: function (e) {
             alert("Probably didn't work :(");
             //console.log(parameters);
+        }
+    });
+}
+
+//mag.html
+//gets event info from DB and displays in console
+function showAllEvents() {
+    var webMethod = "../AccountServices.asmx/GetEvents";
+    $.ajax({
+        type: "POST",
+        url: webMethod,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+            if (msg.d.length > 0) {
+                eventsArray = msg.d;
+                for (var i = 0; i < eventsArray.length; i++) {
+                    if (eventsArray[i].eventId !== null) {
+                        console.log("eventId: " + eventsArray[i].eventId);
+                        console.log("Date: " + eventsArray[i].date);
+                        console.log("Description: " + eventsArray[i].description);
+                    }
+                }
+                //localStorage.setItem("eventId", EventsArray[0].eventId);
+                //window.open("../html/homePage.html", "_self");
+            }
+            else {
+                alert("Failed");
+            }
         }
     });
 }

@@ -54,3 +54,13 @@ header h1 a{
 	text-decoration: none;
 	color: white;
 }
+
+body h1 {
+    margin-top: 10px;
+    font-size: 24px;
+    background-color: #FFC627;
+    color: black;
+    padding: 7px;
+    width: fit-content;
+    border-radius: 5px;
+}
