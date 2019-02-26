@@ -85,6 +85,7 @@ function addUserToDB(screenName, userName, fName, lName, email, password) {
 }
 
 //index.html
+//createUser.html
 //checks DB for email and password and stores userId in localStorage for reference on other html pages
 function signIn(email, password) {
 
@@ -317,6 +318,7 @@ function showAllEvents() {
         success: function (msg) {
             if (msg.d.length > 0) {
                 eventsArray = msg.d;
+                var evnt
                 for (var i = 0; i < eventsArray.length; i++) {
                     if (eventsArray[i].eventId !== null) {
                         console.log("eventId: " + eventsArray[i].eventId);
