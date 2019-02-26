@@ -135,6 +135,33 @@ namespace accountManager
             //}
         }
 
+        [WebMethod(EnableSession = true)]
+        public void EditUser(string userId, string firstName, string lastName, string screenName, string email, string password)
+        {
+            string sqlConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            string sqlSelect = "UPDATE users SET ScreenName=@screenNameValue, Email=@emailValue, FirstName=@firstNameValue, LastName=@lastNameValue, Password=@passwordValue " +
+                               "WHERE UserID=@userIdValue";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectionString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            sqlCommand.Parameters.AddWithValue("@screenNameValue", HttpUtility.UrlDecode(screenName));
+            sqlCommand.Parameters.AddWithValue("@emailValue", HttpUtility.UrlDecode(email));
+            sqlCommand.Parameters.AddWithValue("@firstNameValue", HttpUtility.UrlDecode(firstName));
+            sqlCommand.Parameters.AddWithValue("@lastNameValue", HttpUtility.UrlDecode(lastName));
+            sqlCommand.Parameters.AddWithValue("@passwordValue", HttpUtility.UrlDecode(password));
+            sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(userId));
+
+            sqlConnection.Open();
+            try
+            {
+                sqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+            }
+            sqlConnection.Close();
+        }
 
         //sign out
         [WebMethod(EnableSession = true)]

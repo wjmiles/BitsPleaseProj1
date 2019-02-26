@@ -95,7 +95,8 @@ function signIn(email, password) {
     }
     else {
         var webMethod = "../AccountServices.asmx/SignIn";
-        var parameters = "{\"email\":\"" + encodeURI(email) + "\",\"password\":\"" + encodeURI(password) + "\"}";
+        var parameters = "{\"email\":\"" + encodeURI(email) +
+            "\",\"password\":\"" + encodeURI(password) + "\"}";
 
         $.ajax({
             type: "POST",
@@ -180,7 +181,34 @@ function loadAccountInfo() {
 //profile.html
 //updates the user info in the DB
 function editAccountInfo() {
+    var fName, lName, screenName, email, password;
 
+    fName = document.getElementById("fName").value;
+    lName = document.getElementById("lName").value;
+    screenName = document.getElementById("screenName").value;
+    email = document.getElementById("email").value;
+    password = document.getElementById("password").value;
+
+    var storedParam = localStorage.getItem("userId");
+    var webMethod = "../AccountServices.asmx/EditUser";
+    var parameters = "{\"userId\":\"" + encodeURI(storedParam) +
+                     "\",\"firstName\":\"" + encodeURI(fName) +
+                     "\",\"lastName\":\"" + encodeURI(lName) +
+                     "\",\"screenName\":\"" + encodeURI(screenName) +
+                     "\",\"email\":\"" + encodeURI(email) +
+                     "\",\"password\":\"" + encodeURI(password) + "\"}";
+    alert(parameters);
+
+    $.ajax({
+        type: "POST",
+        url: webMethod,
+        data: parameters,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (msg) {
+            loadAccountInfo();
+        }
+    });
 }
 
 //profile.html
