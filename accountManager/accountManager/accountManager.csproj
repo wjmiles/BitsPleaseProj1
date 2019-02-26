@@ -88,6 +88,7 @@
     <Content Include="FullCalendar_Files\moment.js" />
     <Content Include="html\calendar.html" />
     <Content Include="html\createAccount.html" />
+    <Content Include="html\createEvent.html" />
     <Content Include="html\profile.html" />
     <Content Include="html\map.html" />
     <Content Include="Scripts\createAccount.js" />

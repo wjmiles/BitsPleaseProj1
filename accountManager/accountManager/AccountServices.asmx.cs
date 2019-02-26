@@ -8,11 +8,6 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 
 using System.Data;
-using System.Web.Script.Services;
-using System.Web.Script.Serialization;
-
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace accountManager
 {
@@ -32,7 +27,7 @@ namespace accountManager
         {
             string sqlConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
 
-            string sqlSelect = "INSERT INTO `users` (`ScreenName`, `Email`, `FirstName`, `LastName`, `Password`) " + 
+            string sqlSelect = "INSERT INTO `users` (`ScreenName`, `Email`, `FirstName`, `LastName`, `Password`) " +
                                "VALUES(@sNameValue, @emailValue, @fNameValue, @lNameValue, @passwordValue);";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectionString);
@@ -49,19 +44,17 @@ namespace accountManager
             {
                 int id = Convert.ToInt32(sqlCommand.ExecuteScalar());
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
             }
             sqlConnection.Close();
 
             return email;
         }
 
-        List<Account> account = new List<Account>();
-
         //sign in
         [WebMethod(EnableSession = true)]
-        [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-        public string SignIn(string email, string password)
+        public Account[] SignIn(string email, string password)
         {
             bool success = false;
 
@@ -78,8 +71,53 @@ namespace accountManager
             MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
             DataTable sqlDt = new DataTable();
             sqlDa.Fill(sqlDt);
+            List<Account> accountTemp = new List<Account>();
             if (sqlDt.Rows.Count > 0)
             {
+                for (int i = 0; i < sqlDt.Rows.Count; i++)
+                {
+                    accountTemp.Add(new Account
+                    {
+                        userId = Convert.ToInt32(sqlDt.Rows[i]["UserID"]),
+                        screenName = sqlDt.Rows[i]["ScreenName"].ToString(),
+                        email = sqlDt.Rows[i]["Email"].ToString(),
+                        firstName = sqlDt.Rows[i]["FirstName"].ToString(),
+                        lastName = sqlDt.Rows[i]["LastName"].ToString(),
+                        password = sqlDt.Rows[i]["Password"].ToString(),
+                        admin = Convert.ToBoolean(sqlDt.Rows[i]["Admin"])
+                    });
+                }
+                success = true;
+            }
+            return accountTemp.ToArray();
+        }
+
+
+        [WebMethod(EnableSession = true)]
+        public Account[] GetAccount(string userId)
+        {
+            //string id = Session["UserID"].ToString();
+
+            //if (Session["UserID"] == null)
+            //{
+            //    return new Account[0];
+            //}
+            //else
+            //{
+                DataTable sqlDt = new DataTable("account");
+
+                string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+                string sqlSelect = "select * from users where UserID=@userIdValue";
+
+                MySqlConnection sqlConnection = new MySqlConnection(sqlConnectString);
+                MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+                sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(userId));
+
+                MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+                sqlDa.Fill(sqlDt);
+
+                List<Account> account = new List<Account>();
                 for (int i = 0; i < sqlDt.Rows.Count; i++)
                 {
                     account.Add(new Account
@@ -93,33 +131,10 @@ namespace accountManager
                         admin = Convert.ToBoolean(sqlDt.Rows[i]["Admin"])
                     });
                 }
-                
-                //Session["UserID"] = sqlDt.Rows[0]["UserID"];
-                //Session["Admin"] = sqlDt.Rows[0]["Admin"];
-                success = true;
-            }
-
-            //string id = Session["UserID"].ToString();
-            //string admin = Session["Admin"].ToString();
-
-            string str = new JavaScriptSerializer().Serialize(account);
-            saveReturn(str);
-            return str;
+                return account.ToArray();
+            //}
         }
 
-        /*
-        [WebMethod(EnableSession = true)]
-        public Account[] GetAccount()
-        {
-            if (Session["id"] != null)
-            {
-                DataTable sqlDt = new DataTable("account");
-
-                string sqlConnectString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
-                string sqlSelect = "select * from users where UserID=@Session['UserID']";
-            }
-        }
-        */
 
         //sign out
         [WebMethod(EnableSession = true)]
@@ -129,15 +144,44 @@ namespace accountManager
             return true;
         }
 
+        //creates new event
         [WebMethod(EnableSession = true)]
-        public void saveReturn(string testStr)
+        public string NewEvent(string userId, string eName, string eType, string eCity, string eState, string eZip, string eAddress, string eDate, string eTime, string eAccessibility, string eDescription, string eCapacity, string eHost)
         {
-          FileStream fs = new FileStream("C:/Users/wmiles/OneDrive - Carlisle Companies Incorporated/Desktop/Events.txt", FileMode.Create, FileAccess.Write);
-          BinaryFormatter bf = new BinaryFormatter();
+            string sqlConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
 
-          bf.Serialize(fs, testStr);
+            string sqlSelect = "INSERT INTO `events` (`UserID`,`eventName`, `eventType`, `City`, `State`, `Zip`, `Address`, `Date`, `Time`, `Accessibility`, `Description`, `eventCapacity`, `eventHost`) " +
+                               "VALUES (@userIdValue, @eNameValue, @eTypeValue, @eCityValue, @eStateValue, @eZipValue, @eAddressValue, @eDateValue, @eTimeValue, @eAccessibilityValue, @eDescriptionValue, @eCapacityValue, @eHostValue);";
 
-          fs.Close();
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectionString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(userId));
+            sqlCommand.Parameters.AddWithValue("@eNameValue", HttpUtility.UrlDecode(eName));
+            sqlCommand.Parameters.AddWithValue("@eTypeValue", HttpUtility.UrlDecode(eType));
+            sqlCommand.Parameters.AddWithValue("@eCityValue", HttpUtility.UrlDecode(eCity));
+            sqlCommand.Parameters.AddWithValue("@eStateValue", HttpUtility.UrlDecode(eState));
+            sqlCommand.Parameters.AddWithValue("@eZipValue", HttpUtility.UrlDecode(eZip));
+            sqlCommand.Parameters.AddWithValue("@eAddressValue", HttpUtility.UrlDecode(eAddress));
+            sqlCommand.Parameters.AddWithValue("@eDateValue", HttpUtility.UrlDecode(eDate));
+            sqlCommand.Parameters.AddWithValue("@eTimeValue", HttpUtility.UrlDecode(eTime));
+            sqlCommand.Parameters.AddWithValue("@eAccessibilityValue", HttpUtility.UrlDecode(eAccessibility));
+            sqlCommand.Parameters.AddWithValue("@eDescriptionValue", HttpUtility.UrlDecode(eDescription));
+            sqlCommand.Parameters.AddWithValue("@eCapacityValue", HttpUtility.UrlDecode(eCapacity));
+            sqlCommand.Parameters.AddWithValue("@eHostValue", HttpUtility.UrlDecode(eHost));
+
+            sqlConnection.Open();
+            try
+            {
+                int eventId = Convert.ToInt32(sqlCommand.ExecuteScalar());
+            }
+            catch (Exception e)
+            {
+            }
+            sqlConnection.Close();
+
+            string str = eName + ", " + eType + ", " + eCity + ", " + eState + ", " + eZip + ", " + eAddress + ", " + eDate + ", " + eTime + ", " + eAccessibility + ", " + eDescription + ", " + eCapacity + ", " + eHost;
+            return str;
         }
 
         //user count
@@ -147,6 +191,23 @@ namespace accountManager
         {
             string sqlConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
             string sqlSelect = "SELECT * from users";
+
+            MySqlConnection sqlConnection = new MySqlConnection(sqlConnectionString);
+            MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
+
+            MySqlDataAdapter sqlDa = new MySqlDataAdapter(sqlCommand);
+            DataTable sqlDt = new DataTable();
+            sqlDa.Fill(sqlDt);
+            return sqlDt.Rows.Count;
+        }
+
+        //event count
+        //more testing
+        [WebMethod]
+        public int NumberOfEvents()
+        {
+            string sqlConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
+            string sqlSelect = "SELECT * from events";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectionString);
             MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
