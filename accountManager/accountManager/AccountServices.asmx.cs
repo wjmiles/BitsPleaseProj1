@@ -197,30 +197,19 @@ namespace accountManager
 
         //creates new event
         [WebMethod(EnableSession = true)]
-        public string NewEvent(string userId, string eName, string eType, string eCity, string eState, string eZip, string eAddress, string eDate, string eTime, string eAccessibility, string eDescription, string eCapacity, string eHost)
+        public string NewEvent(string eDate, string eDescription)
         {
             string sqlConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["myDB"].ConnectionString;
 
-            string sqlSelect = "INSERT INTO `events` (`UserID`,`eventName`, `eventType`, `City`, `State`, `Zip`, `Address`, `Date`, `Time`, `Accessibility`, `Description`, `eventCapacity`, `eventHost`) " +
-                               "VALUES (@userIdValue, @eNameValue, @eTypeValue, @eCityValue, @eStateValue, @eZipValue, @eAddressValue, @eDateValue, @eTimeValue, @eAccessibilityValue, @eDescriptionValue, @eCapacityValue, @eHostValue);";
+            string sqlSelect = "INSERT INTO `events` (`Date`, `Description`) " +
+                               "VALUES (@eDateValue, @eDescriptionValue);";
 
             MySqlConnection sqlConnection = new MySqlConnection(sqlConnectionString);
             MySqlCommand sqlCommand = new MySqlCommand(sqlSelect, sqlConnection);
 
-            sqlCommand.Parameters.AddWithValue("@userIdValue", HttpUtility.UrlDecode(userId));
-            sqlCommand.Parameters.AddWithValue("@eNameValue", HttpUtility.UrlDecode(eName));
-            sqlCommand.Parameters.AddWithValue("@eTypeValue", HttpUtility.UrlDecode(eType));
-            sqlCommand.Parameters.AddWithValue("@eCityValue", HttpUtility.UrlDecode(eCity));
-            sqlCommand.Parameters.AddWithValue("@eStateValue", HttpUtility.UrlDecode(eState));
-            sqlCommand.Parameters.AddWithValue("@eZipValue", HttpUtility.UrlDecode(eZip));
-            sqlCommand.Parameters.AddWithValue("@eAddressValue", HttpUtility.UrlDecode(eAddress));
             sqlCommand.Parameters.AddWithValue("@eDateValue", HttpUtility.UrlDecode(eDate));
-            sqlCommand.Parameters.AddWithValue("@eTimeValue", HttpUtility.UrlDecode(eTime));
-            sqlCommand.Parameters.AddWithValue("@eAccessibilityValue", HttpUtility.UrlDecode(eAccessibility));
             sqlCommand.Parameters.AddWithValue("@eDescriptionValue", HttpUtility.UrlDecode(eDescription));
-            sqlCommand.Parameters.AddWithValue("@eCapacityValue", HttpUtility.UrlDecode(eCapacity));
-            sqlCommand.Parameters.AddWithValue("@eHostValue", HttpUtility.UrlDecode(eHost));
-
+            
             sqlConnection.Open();
             try
             {
@@ -231,7 +220,7 @@ namespace accountManager
             }
             sqlConnection.Close();
 
-            string str = eName + ", " + eType + ", " + eCity + ", " + eState + ", " + eZip + ", " + eAddress + ", " + eDate + ", " + eTime + ", " + eAccessibility + ", " + eDescription + ", " + eCapacity + ", " + eHost;
+            string str = eDate + ", " + eDescription;
             return str;
         }
 

@@ -232,20 +232,10 @@ function deleteAccount() {
 //createEvent.html
 //empties all values and set date, time to current and accessibility to public
 function defaultValues() {
-    var today, now, month, day, time, hour, minute;
+    var today, now, month, day;
 
-    document.getElementById("eName").value = "";
-    document.getElementById("eType").value = "";
-    document.getElementById("eCity").value = "";
-    document.getElementById("eState").value = "";
-    document.getElementById("eZip").value = "";
-    document.getElementById("eAddress").value = "";
     document.getElementById("eDate").value = "";
-    document.getElementById("eTime").value = "";
-    document.getElementById("public").checked = true;
     document.getElementById("eDescription").value = "";
-    document.getElementById("eCapacity").value = "";
-    document.getElementById("eHost").value = "";
 
     now = new Date();
     month = now.getMonth() + 1;
@@ -260,22 +250,6 @@ function defaultValues() {
 
     //console.log(today);
     document.getElementById("eDate").value = today;
-
-    hour = now.getHours() + 1;
-    minute = now.getMinutes();
-    if (hour < 10) {
-        hour = "0" + hour;
-    }
-    if (hour === 24) {
-        hour = "00";
-    }
-    if (minute < 10) {
-        minute = "0" + minute;
-    }
-    time = hour + ":" + minute;
-
-    //console.log(time);
-    document.getElementById("eTime").value = time;
 }
 
 //createEvent.html
@@ -284,83 +258,35 @@ function storeEventInfo() {
 
     //altert text needs to be changes
 
-    var eventName, eventType, city, state, zip, address, date, time, eAccessibility, accessibility, description, eventCapacity, eventHost;
+    var date, description;
 
-    eventName = document.getElementById("eName").value;
-    eventType = document.getElementById("eType").value;
-    city = document.getElementById("eCity").value;
-    state = document.getElementById("eState").value;
-    zip = document.getElementById("eZip").value;
-    address = document.getElementById("eAddress").value;
     date = document.getElementById("eDate").value;
-    time = document.getElementById("eTime").value;
-    eAccessibility = document.getElementsByName("eAccessibility");
-    if (eAccessibility[0].checked) {
-        accessibility = "0";
-    }
-    else if (eAccessibility[1].checked) {
-        accessibility = "1";
-    }
     description = document.getElementById("eDescription").value;
-    eventCapacity = document.getElementById("eCapacity").value;
-    eventHost = document.getElementById("eHost").value;
-
-    if (eventName === "" ||
-        eventType === "" ||
-        city === "" ||
-        state === "" ||
-        address === "" ||
-        date === "" ||
-        time === "" ||
-        accessibility === "" ||
-        description === "" ||
-        eventCapacity === "" ||
-        eventHost === "") {
+    
+    if (date === "" ||
+        description === "" ){
         alert("Please fill in all feilds");
     }
     else {
-        addEventToDB(eventName, eventType, city, state, zip, address, date, time, accessibility, description, eventCapacity, eventHost);
+        addEventToDB(date, description);
         defaultValues();
     }
     /*
     //Test
-    console.log("eventName: " + eventName);
-    console.log("eventType: " + eventType);
-    console.log("city: " + city);
-    console.log("state: " + state);
-    console.log("zip: " + zip);
-    console.log("address: " + address);
     console.log("date: " + date);
-    console.log("time: " + time);
-    console.log("accessibility: " + accessibility);
     console.log("description: " + description);
-    console.log("eventCapacity: " + eventCapacity);
-    console.log("eventHost: " + eventHost);
     */
 }
 
 //createEvent.html
 //add Event to DB with info from html
-function addEventToDB(eventName, eventType, city, state, zip, address, date, time, accessibility, description, eventCapacity, eventHost) {
+function addEventToDB(date, description) {
 
     //altert text needs to be changes
 
-    var storedParam = localStorage.getItem("userId");
-
     var webMethod = "../AccountServices.asmx/NewEvent";
-    var parameters = "{\"userId\":\"" + encodeURI(storedParam) +
-        "\",\"eName\":\"" + encodeURI(eventName) +
-        "\",\"eType\":\"" + encodeURI(eventType) +
-        "\",\"eCity\":\"" + encodeURI(city) +
-        "\",\"eState\":\"" + encodeURI(state) +
-        "\",\"eZip\":\"" + encodeURI(zip) +
-        "\",\"eAddress\":\"" + encodeURI(address) +
-        "\",\"eDate\":\"" + encodeURI(date) +
-        "\",\"eTime\":\"" + encodeURI(time) +
-        "\",\"eAccessibility\":\"" + encodeURI(accessibility) +
-        "\",\"eDescription\":\"" + encodeURI(description) +
-        "\",\"eCapacity\":\"" + encodeURI(eventCapacity) +
-        "\",\"eHost\":\"" + encodeURI(eventHost) + "\"}";
+    var parameters = "{\"eDate\":\"" + encodeURI(date) +
+                     "\",\"eDescription\":\"" + encodeURI(description) + "\"}";
 
     $.ajax({
         type: "POST",
